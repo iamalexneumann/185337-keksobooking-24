@@ -1,9 +1,7 @@
 # Личный проект «Кексобукинг»
 
 * Студент: [Alexey Ivanov](https://up.htmlacademy.ru/javascript/24/user/185337).
-* Наставник: [Александр
-Палян](https://htmlacademy.ru/profile/id1231107).
-
+* Наставник: [Александр Палян](https://htmlacademy.ru/profile/id1231107).
 
 ---
 
