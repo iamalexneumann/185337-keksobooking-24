@@ -7,9 +7,16 @@
  * @returns {number} Результат: целое число из диапазона "от...до"
 */
 
-const getRandomNumber = (min, max) => (min >= 0 && min < max) ? Math.floor(Math.random() * (max - min + 1)) + min : null;
+const getRandomNumber = (min, max) => {
+  min = Math.round(min);
+  max = Math.floor(max);
+  if (min >= 0 && min < max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+  return null;
+};
 
-getRandomNumber(2, 20);
+getRandomNumber(1, 2);
 
 /**
   * Функция, возвращающая случайное число с плавающей точкой из переданного диапазона включительно.
@@ -19,6 +26,6 @@ getRandomNumber(2, 20);
   * @returns {number} Результат: число с плавающей точкой из диапазона "от...до" с указанным "количеством знаков после запятой"
 */
 
-const getRandomNumberFloating = (min, max, float) => (min >= 0 && min < max) ? (Math.random() * (max - min + 1) + min).toFixed(float) : null;
+const getRandomNumberFloating = (min, max, float) => (min >= 0 && min < max) ? (Math.random() * (max - min) + min).toFixed(float) : null;
 
-getRandomNumberFloating(2, 20, 3);
+getRandomNumberFloating(1.11, 1.12, 3);
