@@ -135,6 +135,4 @@ const createAd = (element, index) => {
   };
 };
 
-const ads = Array.from({length: ADS_COUNT}, createAd);
-
-console.log(ads);
+Array.from({length: ADS_COUNT}, createAd);
