@@ -97,7 +97,7 @@ const FEATURES = [
   'conditioner',
 ];
 
-const DESCRIPTION = [
+const DESCRIPTIONS = [
   'Aliquam varius lectus quis est porttitor, sed commodo nisl sagittis.',
   'Suspendisse fringilla ipsum eget efficitur rhoncus.',
   'Ut at nibh nec dolor viverra eleifend.',
@@ -137,7 +137,7 @@ const createAd = (element, index) => {
       checkin: getRandomArrayElement(HOURS),
       checkout: getRandomArrayElement(HOURS),
       features: getRandomArray(shuffleArray(FEATURES)),
-      description: getRandomArrayElement(DESCRIPTION),
+      description: getRandomArrayElement(DESCRIPTIONS),
       photos: getRandomArray(shuffleArray(PHOTOS)),
     },
     location: {
