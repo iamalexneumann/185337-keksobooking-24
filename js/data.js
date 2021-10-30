@@ -99,4 +99,7 @@ const createAd = (element, index) => {
   };
 };
 
-export {avatars, TITLES, TYPES, HOURS, FEATURES, DESCRIPTIONS, PHOTOS, createAd};
+const ADS_COUNT = 10;
+const createAds = () => Array.from({length: ADS_COUNT}, createAd);
+
+export {createAds};
