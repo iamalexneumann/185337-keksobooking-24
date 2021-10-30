@@ -5,7 +5,22 @@ const cardTemplate = document.querySelector('#card').content.querySelector('.pop
 const similarAds = createAds();
 const cardItemFragment = document.createDocumentFragment();
 
-similarAds.forEach(({author: {avatar}, offer: {title, address, price, type, rooms, guests, checkin, checkout, features, description, photos}}) => {
+similarAds.forEach(({
+  author: {avatar},
+  offer: {
+    title,
+    address,
+    price,
+    type,
+    rooms,
+    guests,
+    checkin,
+    checkout,
+    features,
+    description,
+    photos,
+  },
+}) => {
   const cardItem = cardTemplate.cloneNode(true);
   const popupTitle = cardItem.querySelector('.popup__title');
   const popupAddress = cardItem.querySelector('.popup__text--address');
