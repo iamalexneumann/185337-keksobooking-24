@@ -24,7 +24,7 @@ similarAds.forEach(({author: {avatar}, offer: {title, address, price, type, room
   const popupFeature = popupFeatures.querySelectorAll('.popup__feature');
   const popupDescription = cardItem.querySelector('.popup__description');
   const popupPhotos = cardItem.querySelector('.popup__photos');
-  const popupPhoto = cardItem.querySelector('.popup__photo');
+  const popupPhoto = popupPhotos.querySelector('.popup__photo');
   const popupAvatar = cardItem.querySelector('.popup__avatar');
 
   (title) ? popupTitle.textContent = title : popupTitle.classList.add('visually-hidden');
