@@ -5,7 +5,7 @@ const cardTemplate = document.querySelector('#card').content.querySelector('.pop
 const similarAds = createAds();
 const cardItemFragment = document.createDocumentFragment();
 
-similarAds.forEach(({author:{avatar}, offer:{title, address, price, type, rooms, guests, checkin, checkout, features, description, photos}}) => {
+similarAds.forEach(({author: {avatar}, offer: {title, address, price, type, rooms, guests, checkin, checkout, features, description, photos}}) => {
   const cardItem = cardTemplate.cloneNode(true);
   const popupTitle = cardItem.querySelector('.popup__title');
   const popupAddress = cardItem.querySelector('.popup__text--address');
@@ -26,7 +26,6 @@ similarAds.forEach(({author:{avatar}, offer:{title, address, price, type, rooms,
   const popupPhotos = cardItem.querySelector('.popup__photos');
   const popupPhoto = cardItem.querySelector('.popup__photo');
   const popupAvatar = cardItem.querySelector('.popup__avatar');
-  const adAvatar = avatar;
 
   (title) ? popupTitle.textContent = title : popupTitle.classList.add('visually-hidden');
   (address) ? popupAddress.textContent = address : popupAddress.classList.add('visually-hidden');
@@ -60,7 +59,7 @@ similarAds.forEach(({author:{avatar}, offer:{title, address, price, type, rooms,
   } else {
     popupPhotos.classList.add('visually-hidden');
   }
-  (adAvatar) ? popupAvatar.src = adAvatar : popupAvatar.classList.add('visually-hidden');
+  (avatar) ? popupAvatar.src = avatar : popupAvatar.classList.add('visually-hidden');
   cardItemFragment.appendChild(cardItem);
 });
 
