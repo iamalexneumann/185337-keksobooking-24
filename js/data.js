@@ -63,6 +63,14 @@ const PHOTOS = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg',
 ];
 
+const AD_TYPES = {
+  flat: 'Квартира',
+  bungalow: 'Бунгало',
+  house: 'Дом',
+  palace: 'Дворец',
+  hotel: 'Отель',
+};
+
 /**
  * Функция, возвращающая JS-объект со сгенерированными данными
  * @param {*} element
@@ -99,4 +107,4 @@ const createAd = (element, index) => {
   };
 };
 
-export {avatars, TITLES, TYPES, HOURS, FEATURES, DESCRIPTIONS, PHOTOS, createAd};
+export {createAd, AD_TYPES};
