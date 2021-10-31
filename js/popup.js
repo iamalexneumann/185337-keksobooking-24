@@ -1,3 +1,5 @@
+import {AD_TYPES} from './data.js';
+
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 const cardItemFragment = document.createDocumentFragment();
 
@@ -22,13 +24,6 @@ const createSimilarAd = ({
   const popupAddress = cardItem.querySelector('.popup__text--address');
   const popupPrice = cardItem.querySelector('.popup__text--price');
   const popupType = cardItem.querySelector('.popup__type');
-  const AD_TYPES = {
-    flat: 'Квартира',
-    bungalow: 'Бунгало',
-    house: 'Дом',
-    palace: 'Дворец',
-    hotel: 'Отель',
-  };
   const popupCapacity = cardItem.querySelector('.popup__text--capacity');
   const popupTime = cardItem.querySelector('.popup__text--time');
   const popupFeatures = cardItem.querySelector('.popup__features');
