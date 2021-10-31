@@ -99,7 +99,4 @@ const createAd = (element, index) => {
   };
 };
 
-const ADS_COUNT = 10;
-const createAds = () => Array.from({length: ADS_COUNT}, createAd);
-
-export {createAds};
+export {createAd};

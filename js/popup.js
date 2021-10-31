@@ -1,11 +1,7 @@
-import {createAds} from './data.js';
-
-const mapCanvas = document.querySelector('.map__canvas');
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
-const similarAds = createAds();
 const cardItemFragment = document.createDocumentFragment();
 
-similarAds.forEach(({
+const createSimilarAd = ({
   author: {avatar},
   offer: {
     title,
@@ -41,7 +37,6 @@ similarAds.forEach(({
   const popupPhotos = cardItem.querySelector('.popup__photos');
   const popupPhoto = popupPhotos.querySelector('.popup__photo');
   const popupAvatar = cardItem.querySelector('.popup__avatar');
-
   (title) ? popupTitle.textContent = title : popupTitle.classList.add('visually-hidden');
   (address) ? popupAddress.textContent = address : popupAddress.classList.add('visually-hidden');
   (price) ? popupPrice.textContent = `${price} ₽/ночь` : popupPrice.classList.add('visually-hidden');
@@ -76,6 +71,6 @@ similarAds.forEach(({
   }
   (avatar) ? popupAvatar.src = avatar : popupAvatar.classList.add('visually-hidden');
   cardItemFragment.appendChild(cardItem);
-});
+};
 
-mapCanvas.appendChild(cardItemFragment);
+export {createSimilarAd, cardItemFragment};
