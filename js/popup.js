@@ -1,8 +1,49 @@
+import {isAvailable} from './util.js';
 import {AD_TYPES} from './data.js';
 
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 const cardItemFragment = document.createDocumentFragment();
 
+/**
+ * Функция, выводящая на страницу однострочные данные
+ * https://learn.javascript.ru/string#tryuk-s-pobitovym-ne
+ * @param {*} data входящая строка, число или массив данных из объекта data.js
+ * @param {*} selector селектор по классу, существующий на странице, для вывода данных
+ * @param {string} value строка выводимых данных
+ */
+const outputStringData = (data, selector, value = data) => {
+  if (data && (typeof data === 'string' || typeof data === 'number')) {
+    if (typeof data === 'string' && ~data.indexOf('png')) {
+      selector.src = value;
+    } else {
+      selector.textContent = value;
+    }
+  } else if (Array.isArray(data) && data.length > 0 && data.every(isAvailable)) {
+    selector.textContent = value;
+  } else {
+    selector.classList.add('visually-hidden');
+    selector.innerHTML = '';
+  }
+};
+/**
+ * Функция-обёртка, выводящая на страницу многострочные данные
+ * @param {array} data входящая строка массива данных из объекта data.js
+ * @param {*} selector селектор по классу, существующий на странице, для вывода данных
+ * @param {function} inputFunction входящая функция со сгенерированными данными
+ */
+const outputArrayData = (data, selector, inputFunction) => {
+  if (Array.isArray(data) && data.length > 0 && data.every(isAvailable)) {
+    inputFunction();
+  } else {
+    selector.classList.add('visually-hidden');
+    selector.innerHTML = '';
+  }
+};
+
+/**
+ * Функция, генерирующая разметку похожих элементов
+ * @param {object} объект данных из data.js для генерации разметки
+ */
 const createSimilarAd = ({
   author: {avatar},
   offer: {
@@ -20,25 +61,14 @@ const createSimilarAd = ({
   },
 }) => {
   const cardItem = cardTemplate.cloneNode(true);
-  const popupTitle = cardItem.querySelector('.popup__title');
-  const popupAddress = cardItem.querySelector('.popup__text--address');
-  const popupPrice = cardItem.querySelector('.popup__text--price');
-  const popupType = cardItem.querySelector('.popup__type');
-  const popupCapacity = cardItem.querySelector('.popup__text--capacity');
-  const popupTime = cardItem.querySelector('.popup__text--time');
   const popupFeatures = cardItem.querySelector('.popup__features');
   const popupFeature = popupFeatures.querySelectorAll('.popup__feature');
-  const popupDescription = cardItem.querySelector('.popup__description');
   const popupPhotos = cardItem.querySelector('.popup__photos');
   const popupPhoto = popupPhotos.querySelector('.popup__photo');
-  const popupAvatar = cardItem.querySelector('.popup__avatar');
-  (title) ? popupTitle.textContent = title : popupTitle.classList.add('visually-hidden');
-  (address) ? popupAddress.textContent = address : popupAddress.classList.add('visually-hidden');
-  (price) ? popupPrice.textContent = `${price} ₽/ночь` : popupPrice.classList.add('visually-hidden');
-  (type) ? popupType.textContent = AD_TYPES[type] : popupAddress.classList.add('visually-hidden');
-  (rooms && guests) ? popupCapacity.textContent = `${rooms} комнаты для ${guests} гостей` : popupCapacity.classList.add('visually-hidden');
-  (checkin && checkout) ? popupTime.textContent = `Заезд после ${checkin}, выезд до ${checkout}` : popupTime.classList.add('visually-hidden');
-  if (features.length > 0) {
+  /**
+   * Функция, выводящая удобства объекта
+   */
+  const outputFeatures = () => {
     popupFeature.forEach((popupFeatureItem) => {
       const isNecessary = features.some(
         (adFeature) => popupFeatureItem.classList.contains(`popup__feature--${adFeature}`),
@@ -47,11 +77,11 @@ const createSimilarAd = ({
         popupFeatureItem.remove();
       }
     });
-  } else {
-    popupFeatures.classList.add('visually-hidden');
-  }
-  (description) ? popupDescription.textContent = description : popupDescription.classList.add('visually-hidden');
-  if (photos.length > 0) {
+  };
+  /**
+   * Функция, выводящая фотографии объекта
+   */
+  const outputPhotos = () => {
     const adPhotoFragment = document.createDocumentFragment();
     photos.forEach((adPhoto) => {
       const popupClonePhoto = popupPhoto.cloneNode(true);
@@ -61,10 +91,18 @@ const createSimilarAd = ({
     });
     popupPhoto.remove();
     popupPhotos.appendChild(adPhotoFragment);
-  } else {
-    popupPhotos.classList.add('visually-hidden');
-  }
-  (avatar) ? popupAvatar.src = avatar : popupAvatar.classList.add('visually-hidden');
+  };
+
+  outputStringData(title, cardItem.querySelector('.popup__title'));
+  outputStringData(address, cardItem.querySelector('.popup__text--address'));
+  outputStringData(price, cardItem.querySelector('.popup__text--price'), `${price} ₽/ночь`);
+  outputStringData(type, cardItem.querySelector('.popup__type'), AD_TYPES[type]);
+  outputStringData([rooms, guests], cardItem.querySelector('.popup__text--capacity'), `${rooms} комнаты для ${guests} гостей`);
+  outputStringData([checkin, checkout], cardItem.querySelector('.popup__text--time'), `Заезд после ${checkin}, выезд до ${checkout}`);
+  outputArrayData(features, popupFeatures, outputFeatures);
+  outputStringData(description, cardItem.querySelector('.popup__description'), description);
+  outputArrayData(photos, popupPhotos, outputPhotos);
+  outputStringData(avatar, cardItem.querySelector('.popup__avatar'));
   cardItemFragment.appendChild(cardItem);
 };
 

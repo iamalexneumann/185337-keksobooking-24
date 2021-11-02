@@ -5,7 +5,7 @@
  * @param {number} min начальное значение диапазона (от)
  * @param {number} max конечное значение диапазона (до)
  * @returns {number} Результат: целое число из диапазона "от...до"
-*/
+ */
 const getRandomNumber = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -16,12 +16,12 @@ const getRandomNumber = (min, max) => {
 };
 
 /**
-  * Функция, возвращающая случайное число с плавающей точкой из переданного диапазона включительно.
-  * @param {number} min начальное значение диапазона (от)
-  * @param {number} max конечное значение диапазона (до)
-  * @param {number} float количество знаков после запятой
-  * @returns {number} Результат: число с плавающей точкой из диапазона "от...до" с указанным "количеством знаков после запятой"
-*/
+ * Функция, возвращающая случайное число с плавающей точкой из переданного диапазона включительно.
+ * @param {number} min начальное значение диапазона (от)
+ * @param {number} max конечное значение диапазона (до)
+ * @param {number} float количество знаков после запятой
+ * @returns {number} Результат: число с плавающей точкой из диапазона "от...до" с указанным "количеством знаков после запятой"
+ */
 const getRandomNumberFloating = (min, max, float) => (min >= 0 && min < max) ? (Math.random() * (max - min) + min).toFixed(float) : null;
 
 /**
@@ -47,4 +47,11 @@ const shuffleArray = (elements) => elements.sort(() => Math.random() - 0.5);
  */
 const getRandomArray = (elements) => elements.slice(0, getRandomNumber(1, elements.length-1));
 
-export {getRandomNumber, getRandomNumberFloating, getRandomArrayElement, shuffleArray, getRandomArray};
+/**
+ * Функция, возвращающая наличие значение элемента
+ * @param {*} element проверяемый параметр
+ * @returns Результат: значение элемента или false
+ */
+const isAvailable = (element) => element ? element : false;
+
+export {getRandomNumber, getRandomNumberFloating, getRandomArrayElement, shuffleArray, getRandomArray, isAvailable};
