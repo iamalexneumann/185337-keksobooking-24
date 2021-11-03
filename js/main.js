@@ -1,6 +1,6 @@
 import {createAd} from './data.js';
 import {createSimilarAd, cardItemFragment} from './popup.js';
-import {showElements} from './form.js';
+import {hideElements} from './form.js';
 
 const ADS_COUNT = 1;
 const createAds = () => Array.from({length: ADS_COUNT}, createAd);
@@ -10,4 +10,4 @@ const mapCanvas = document.querySelector('.map__canvas');
 similarAds.forEach(createSimilarAd);
 mapCanvas.appendChild(cardItemFragment);
 
-showElements(['ad-form', 'map__filters']);
+hideElements(['ad-form', 'map__filters']);
