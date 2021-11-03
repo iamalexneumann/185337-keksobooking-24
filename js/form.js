@@ -31,8 +31,8 @@ const setCapacity = () => {
     capacity.options[i].disabled = true;
   }
 
-  roomMatching.some((i) => {
-    capacity.options[capacityIndex[i]].disabled = false;
+  roomMatching.some((match) => {
+    capacity.options[capacityIndex[match]].disabled = false;
   });
 
   capacity.options[capacityIndex[roomMatching[0]]].selected = true;
