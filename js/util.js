@@ -48,10 +48,17 @@ const shuffleArray = (elements) => elements.sort(() => Math.random() - 0.5);
 const getRandomArray = (elements) => elements.slice(0, getRandomNumber(1, elements.length-1));
 
 /**
- * Функция, возвращающая наличие значение элемента
+ * Функция, возвращающая доступность переменной
  * @param {*} element проверяемый параметр
- * @returns Результат: значение элемента или false
+ * @returns Результат: true или false
  */
-const isAvailable = (element) => element ? element : false;
+const isAvailable = (element) => element;
 
-export {getRandomNumber, getRandomNumberFloating, getRandomArrayElement, shuffleArray, getRandomArray, isAvailable};
+/**
+ * Функция, возвращающая доступность непустого массива с непустыми параметрами
+ * @param {array} element проверяемый массив
+ * @returns Результат: true или false
+ */
+const isAvailableArray = (element) => Array.isArray(element) && element.length > 0 && element.every(isAvailable);
+
+export {getRandomNumber, getRandomNumberFloating, getRandomArrayElement, shuffleArray, getRandomArray, isAvailable, isAvailableArray};
