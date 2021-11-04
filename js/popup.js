@@ -1,4 +1,4 @@
-import {isAvailable} from './util.js';
+import {isAvailableArray} from './util.js';
 import {AD_TYPES} from './data.js';
 
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
@@ -18,7 +18,7 @@ const outputStringData = (data, selector, value = data) => {
     } else {
       selector.textContent = value;
     }
-  } else if (Array.isArray(data) && data.length > 0 && data.every(isAvailable)) {
+  } else if (isAvailableArray(data)) {
     selector.textContent = value;
   } else {
     selector.classList.add('visually-hidden');
@@ -32,7 +32,7 @@ const outputStringData = (data, selector, value = data) => {
  * @param {function} inputFunction входящая функция со сгенерированными данными
  */
 const outputArrayData = (data, selector, inputFunction) => {
-  if (Array.isArray(data) && data.length > 0 && data.every(isAvailable)) {
+  if (isAvailableArray(data)) {
     inputFunction();
   } else {
     selector.classList.add('visually-hidden');
@@ -70,9 +70,7 @@ const createSimilarAd = ({
    */
   const outputFeatures = () => {
     popupFeature.forEach((popupFeatureItem) => {
-      const isNecessary = features.some(
-        (adFeature) => popupFeatureItem.classList.contains(`popup__feature--${adFeature}`),
-      );
+      const isNecessary = features.some((adFeature) => popupFeatureItem.classList.contains(`popup__feature--${adFeature}`));
       if (!isNecessary) {
         popupFeatureItem.remove();
       }
