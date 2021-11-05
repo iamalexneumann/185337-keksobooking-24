@@ -55,7 +55,7 @@ const getRandomArray = (elements) => elements.slice(0, getRandomNumber(1, elemen
 const isAvailable = (element) => element;
 
 /**
- * Функция, возвращающая доступность непустого массива с непустыми параметрами
+ * Функция, возвращающая доступность непустого массива с непустыми элементами
  * @param {array} element проверяемый массив
  * @returns Результат: true или false
  */

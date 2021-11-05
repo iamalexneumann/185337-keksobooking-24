@@ -1,114 +1,73 @@
-const adForm = document.querySelector('.ad-form');
-const capacity = adForm.querySelector('#capacity');
-const roomNumber = adForm.querySelector('#room_number');
-
-const ROOM_MATCHING = {
-  1: [1],
-  2: [1, 2],
-  3: [1, 2, 3],
-  100: [0],
-};
-
-const capacityIndex = {};
+import {adFormTitle, adFormPrice, adFormRoomNumber, adFormType, onRoomNumberSelectChange, onTextInputLengthChange, onNumberInputValueChange, onTypeSelectChange} from './form-handlers.js';
 
 /**
- * Функция, генерирующая объект соответствий select.options[i].value с его индексом. Нужна для установки валидного значения setCapacity();
+ * Функция, валидирующая <select>, где должны быть одинаковые значения
+ * @param {element} elementOne первый связанный <select>
+ * @param {element} elementTwo второй связанный <select>
  */
-const getCapacityIndex = () => {
-  for (let i = 0; i < capacity.length; i++) {
-    capacityIndex[capacity.options[i].value] = i;
-  }
-};
-
-getCapacityIndex();
-
-/**
- * Функция, устанавливающая валидные значения в select #capacity
- */
-const setCapacity = () => {
-  const roomMatching = ROOM_MATCHING[roomNumber.value];
-  for (let i = 0; i < capacity.length; i++) {
-    capacity.options[i].disabled = true;
-  }
-
-  roomMatching.some((match) => {
-    capacity.options[capacityIndex[match]].disabled = false;
-  });
-
-  capacity.options[capacityIndex[roomMatching[0]]].selected = true;
-};
-
-/**
- * Функция, валидирующая длину текстовых полей (заголовок объявления) и число в цифровых полях (цена за ночь)
- * @param {string} selector селектор поля ввода, чье значение нужно валидировать
- * @param {number} MIN начальное значение диапазона (от)
- * @param {number} MAX конечное значение диапазона (до)
- * @param {string} minMessage текст подсказки, показываемой если значение поля меньше минимального
- * @param {string} maxMessage текст подсказки, показываемой если значение поля больше минимального
- */
-const validateInputLength = (
-  selector,
-  MIN,
-  MAX,
-  minMessage = `Текст должен быть длиннее ${MIN} симв.`,
-  maxMessage = `Текст должен быть короче ${MAX} симв.`,
-) => {
-  const input = adForm.querySelector(selector);
-  input.addEventListener('input', () => {
-    let value;
-    if (input.type === 'number') {
-      value = input.value;
-    } else {
-      value = input.value.length;
-    }
-
-    if (value < MIN) {
-      input.setCustomValidity(minMessage);
-    } else if (value > MAX) {
-      input.setCustomValidity(maxMessage);
-    } else {
-      input.setCustomValidity('');
-    }
-
-    input.reportValidity();
-  });
-};
-
-/**
- * Функция, валидирующая количество комнат и количество мест
- */
-const validateRooms = () => {
-  roomNumber.addEventListener('change', () => {
-    setCapacity();
+const validateTwoSelects = (elementOne, elementTwo) => {
+  elementOne = document.querySelector(elementOne);
+  elementTwo = document.querySelector(elementTwo);
+  const selectors = [elementOne, elementTwo];
+  selectors.forEach((selector) => {
+    selector.addEventListener('change', () => {
+      selectors.some((selectorItem) => {
+        if (selector !== selectorItem) {
+          selectorItem.value = selector.value;
+        }
+      });
+    });
   });
 };
 
 /**
  * Функция, переводящая элементы страницы в неактивное состояние
- * @param {array} selectors массив селекторов по классу без точки родительских элементов, чьи элементы нужно перевести в неактивное состояние
+ * @param {array} selectors массив селекторов (по классу, без точки) родительских элементов, чьи элементы нужно перевести в неактивное состояние
  */
 const hideElements = (selectors) => {
   selectors.forEach((selector) => {
-    const parent = document.querySelector(`.${selector}`);
-    parent.classList.add(`${selector}--disabled`);
-    parent.querySelectorAll('fieldset, select, input, textarea, button').forEach((child) => {
-      child.disabled = true;
+    const parentSelector = document.querySelector(`.${selector}`);
+    parentSelector.classList.add(`${selector}--disabled`);
+    parentSelector.querySelectorAll('fieldset, select, input, textarea, button').forEach((parentSelectorChild) => {
+      parentSelectorChild.disabled = true;
     });
   });
 };
 
 /**
  * Функция, переводящая элементы страницы в активное состояние
- * @param {array} selectors массив селекторов по классу без точки родительских элементов, чьи элементы нужно перевести в активное состояние
+ * @param {array} selectors массив селекторов (по классу, без точки) родительских элементов, чьи элементы нужно перевести в активное состояние
  */
 const showElements = (selectors) => {
   selectors.forEach((selector) => {
-    const parent = document.querySelector(`.${selector}`);
-    parent.classList.remove(`${selector}--disabled`);
-    parent.querySelectorAll('fieldset, select, input, textarea, button').forEach((child) => {
-      child.disabled = false;
+    const parentSelector = document.querySelector(`.${selector}`);
+    parentSelector.classList.remove(`${selector}--disabled`);
+    parentSelector.querySelectorAll('fieldset, select, input, textarea, button').forEach((parentSelectorChild) => {
+      parentSelectorChild.disabled = false;
     });
   });
 };
 
-export {hideElements, showElements, validateInputLength, setCapacity, validateRooms};
+onTypeSelectChange();
+
+adFormTitle.addEventListener('input', () => {
+  onTextInputLengthChange(adFormTitle, 30, 100);
+});
+
+adFormPrice.addEventListener('input', () => {
+  onNumberInputValueChange(adFormPrice);
+});
+
+onRoomNumberSelectChange();
+
+adFormRoomNumber.addEventListener('change', () => {
+  onRoomNumberSelectChange();
+});
+
+adFormType.addEventListener('change', () => {
+  onTypeSelectChange();
+});
+
+validateTwoSelects('#timein', '#timeout');
+
+export {hideElements, showElements};
