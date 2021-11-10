@@ -1,11 +1,10 @@
 import {createAds} from './data.js';
-import {createSimilarAd, cardItemFragment} from './popup.js';
-import {hideElements, showElements} from './form.js';
+import {createMarker} from './map.js';
 
-const mapCanvas = document.querySelector('.map__canvas');
-const similarAds = createAds(1);
-similarAds.forEach(createSimilarAd);
-mapCanvas.appendChild(cardItemFragment);
+// генерация точек карты
 
-hideElements(['ad-form', 'map__filters']);
-showElements(['ad-form', 'map__filters']);
+const similarAds = createAds(10);
+
+similarAds.forEach((similarAd) => {
+  createMarker(similarAd);
+});

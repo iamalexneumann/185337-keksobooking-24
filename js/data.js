@@ -1,4 +1,10 @@
-import {getRandomNumber, getRandomNumberFloating, getRandomArrayElement, shuffleArray, getRandomArray} from './util.js';
+import {
+  getRandomNumber,
+  getRandomNumberFloating,
+  getRandomArrayElement,
+  shuffleArray,
+  getRandomArray
+} from './util.js';
 
 const AVATARS_COUNT = 10;
 
@@ -73,23 +79,34 @@ const createAd = (element, index) => {
     lat: getRandomNumberFloating(35.65000, 35.75000, 5),
     lng: getRandomNumberFloating(139.70000, 139.80000, 5),
   };
+  const adTitle = getRandomArrayElement(titles);
+  const adAddress = `${location.lat}, ${location.lng}`;
+  const adPrice = getRandomNumber(5000, 100000);
+  const adType =  getRandomArrayElement(types);
+  const adNumberOfRooms = getRandomNumber(1, 10);
+  const adNumberOfGuests = getRandomNumber(1, 10);
+  const adCheckIn = getRandomArrayElement(hours);
+  const adCheckOut = getRandomArrayElement(hours);
+  const adFeatures = getRandomArray(shuffleArray(features));
+  const adDescription = getRandomArrayElement(descriptions);
+  const adPhotos = getRandomArray(shuffleArray(photos));
 
   return {
     author: {
       avatar: avatars[index],
     },
     offer: {
-      title: getRandomArrayElement(titles),
-      address: `${location.lat}, ${location.lng}`,
-      price: getRandomNumber(5000, 100000),
-      type: getRandomArrayElement(types),
-      rooms: getRandomNumber(1, 10),
-      guests: getRandomNumber(1, 10),
-      checkin: getRandomArrayElement(hours),
-      checkout: getRandomArrayElement(hours),
-      features: getRandomArray(shuffleArray(features)),
-      description: getRandomArrayElement(descriptions),
-      photos: getRandomArray(shuffleArray(photos)),
+      title: adTitle,
+      address: adAddress,
+      price: adPrice,
+      type: adType,
+      rooms: adNumberOfRooms,
+      guests: adNumberOfGuests,
+      checkin: adCheckIn,
+      checkout: adCheckOut,
+      features: adFeatures,
+      description: adDescription,
+      photos: adPhotos,
     },
     location: {
       lat: Number(location.lat),

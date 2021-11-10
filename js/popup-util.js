@@ -4,7 +4,7 @@ import {isAvailableArray} from './util.js';
  * Функция, скрывающая элемент на страинце и очищающая его значение
  * @param {*} selector селектор через document.querySelector(element)
  */
-const hideElements = (selector) => {
+const popupHideElements = (selector) => {
   selector.classList.add('visually-hidden');
   selector.innerHTML = '';
 };
@@ -25,7 +25,7 @@ const outputStringData = (data, element, value = data) => {
   } else if (isAvailableArray(data)) {
     element.textContent = value;
   } else {
-    hideElements(element);
+    popupHideElements(element);
   }
 };
 /**
@@ -39,7 +39,7 @@ const outputArrayData = (data, element, callbackFunction) => {
   if (isAvailableArray(data)) {
     callbackFunction();
   } else {
-    hideElements(element);
+    popupHideElements(element);
   }
 };
 
