@@ -31,10 +31,22 @@ const createSimilarAd = ({
   },
 }) => {
   const cardItem = cardTemplate.cloneNode(true);
+  const popupTitle = cardItem.querySelector('.popup__title');
+  const popupAddress = cardItem.querySelector('.popup__text--address');
+  const popupPrice = cardItem.querySelector('.popup__text--price');
+  const popupPriceText = `${price} ₽/ночь`;
+  const popupType = cardItem.querySelector('.popup__type');
   const popupFeatures = cardItem.querySelector('.popup__features');
   const popupFeature = popupFeatures.querySelectorAll('.popup__feature');
+  const popupCapacity = cardItem.querySelector('.popup__text--capacity');
+  const popupCapacityText = `${rooms} комнаты для ${guests} гостей`;
+  const popupTime = cardItem.querySelector('.popup__text--time');
+  const popupTimeText = `Заезд после ${checkin}, выезд до ${checkout}`;
+  const popupDescription = cardItem.querySelector('.popup__description');
   const popupPhotos = cardItem.querySelector('.popup__photos');
   const popupPhoto = popupPhotos.querySelector('.popup__photo');
+  const popupAvatar = cardItem.querySelector('.popup__avatar');
+
   /**
    * Функция, выводящая удобства объекта
    */
@@ -61,54 +73,26 @@ const createSimilarAd = ({
     popupPhotos.appendChild(adPhotoFragment);
   };
 
-  outputStringData(
-    title,
-    cardItem.querySelector('.popup__title'),
-  );
-  outputStringData(
-    address,
-    cardItem.querySelector('.popup__text--address'),
-  );
-  outputStringData(
-    price,
-    cardItem.querySelector('.popup__text--price'),
-    `${price} ₽/ночь`,
-  );
-  outputStringData(
-    type,
-    cardItem.querySelector('.popup__type'),
-    adTypes[type],
-  );
+  outputStringData(title,popupTitle);
+  outputStringData(address,popupAddress);
+  outputStringData(price, popupPrice, popupPriceText);
+  outputStringData(type, popupType, adTypes[type]);
   outputStringData(
     [rooms, guests],
-    cardItem.querySelector('.popup__text--capacity'),
-    `${rooms} комнаты для ${guests} гостей`,
+    popupCapacity,
+    popupCapacityText,
   );
   outputStringData(
     [checkin, checkout],
-    cardItem.querySelector('.popup__text--time'),
-    `Заезд после ${checkin}, выезд до ${checkout}`,
+    popupTime,
+    popupTimeText,
   );
-  outputArrayData(
-    features,
-    popupFeatures,
-    outputFeatures,
-  );
-  outputStringData(
-    description,
-    cardItem.querySelector('.popup__description'),
-    description,
-  );
-  outputArrayData(
-    photos,
-    popupPhotos,
-    outputPhotos,
-  );
-  outputStringData(
-    avatar,
-    cardItem.querySelector('.popup__avatar'),
-  );
-  cardItemFragment.appendChild(cardItem);
+  outputArrayData(features, popupFeatures, outputFeatures);
+  outputStringData(description, popupDescription);
+  outputArrayData(photos, popupPhotos, outputPhotos);
+  outputStringData(avatar, popupAvatar);
+  return cardItem;
+  //cardItemFragment.appendChild(cardItem);
 };
 
 export {createSimilarAd, cardItemFragment};
