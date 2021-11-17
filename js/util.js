@@ -1,72 +1,36 @@
-/**
- * Функция, возвращающая случайное целое число из переданного диапазона включительно.
- * https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Math/random
- * https://learn.javascript.ru/number
- * @param {number} min начальное значение диапазона (от)
- * @param {number} max конечное значение диапазона (до)
- * @returns {number} Результат: целое число из диапазона "от...до"
- */
-const getRandomNumber = (min, max) => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  if (min >= 0 && min < max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
-  return null;
+const ALERT_TIMEOUT = 5000;
+const TIMEOUT_DELAY = 500;
+
+const isEsc = (evt) => evt.key === 'Escape';
+
+const showAlert = (message) => {
+  const alertContainer = document.createElement('div');
+  alertContainer.style.zIndex = 1000;
+  alertContainer.style.position = 'absolute';
+  alertContainer.style.left = '150px';
+  alertContainer.style.top = '200px';
+  alertContainer.style.right = '150px';
+  alertContainer.style.padding = '10px 3px';
+  alertContainer.style.fontSize = '30px';
+  alertContainer.style.textAlign = 'center';
+  alertContainer.style.backgroundColor = 'red';
+
+  alertContainer.textContent = message;
+
+  document.body.append(alertContainer);
+
+  setTimeout(() => {
+    alertContainer.remove();
+  }, ALERT_TIMEOUT);
 };
 
-/**
- * Функция, возвращающая случайное число с плавающей точкой из переданного диапазона включительно.
- * @param {number} min начальное значение диапазона (от)
- * @param {number} max конечное значение диапазона (до)
- * @param {number} float количество знаков после запятой
- * @returns {number} Результат: число с плавающей точкой из диапазона "от...до" с указанным "количеством знаков после запятой"
- */
-const getRandomNumberFloating = (min, max, float) => (min >= 0 && min < max) ? (Math.random() * (max - min) + min).toFixed(float) : null;
+const debounce = (callback) => {
+  let timeoutId;
 
-/**
- * Функция, возвращающая один случайный элемент массива из переданного массива
- * https://up.htmlacademy.ru/profession/backender/1/javascript/demos/5965#11
- * @param {array} elements начальные элементы массива
- * @returns Результат: случайный элемент массива
- */
-const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
-
-/**
- * Функция, возвращающая перемешанные элементы массива из переданного массива
- * https://learn.javascript.ru/task/shuffle
- * @param {array} elements начальные элементы массива
- * @returns Результат: массив с перемешанными элементами
- */
-const shuffleArray = (elements) => elements.sort(() => Math.random() - 0.5);
-
-/**
- * Функция, возвращающая копию части массива случайной длины из переданного массива
- * @param {array} elements начальные элементы массива
- * @returns Результат: массив случайной длины
- */
-const getRandomArray = (elements) => elements.slice(0, getRandomNumber(1, elements.length - 1));
-
-/**
- * Функция, возвращающая доступность переменной
- * @param {*} element проверяемый параметр
- * @returns Результат: true или false
- */
-const isAvailableElement = (element) => element;
-
-/**
- * Функция, возвращающая доступность непустого массива с непустыми элементами
- * @param {array} element проверяемый массив
- * @returns Результат: true или false
- */
-const isAvailableArray = (element) => Array.isArray(element) && element.length > 0 && element.every(isAvailableElement);
-
-export {
-  getRandomNumber,
-  getRandomNumberFloating,
-  getRandomArrayElement,
-  shuffleArray,
-  getRandomArray,
-  isAvailableElement,
-  isAvailableArray
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), TIMEOUT_DELAY);
+  };
 };
+
+export {showAlert, isEsc, debounce};

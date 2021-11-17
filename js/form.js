@@ -1,150 +1,129 @@
-import {adRoomGuests, adTypePrices} from './form-data.js';
+import {getData, onGetSuccess, sendData} from './api.js';
+import {mapFilters} from './filters.js';
+import {setDefaultAddress, setDefaultMainPin, removeMarkerGroup} from './map.js';
 
-const adFormTitle = document.querySelector('#title');
-const adFormPrice = document.querySelector('#price');
-const adFormCapacity = document.querySelector('#capacity');
-const adFormRoomNumber = document.querySelector('#room_number');
-const adFormType = document.querySelector('#type');
-const adFromAddress = document.querySelector('#address');
-const capacityIndex = {};
+const adForm = document.querySelector('.ad-form');
+const titleInput = adForm.querySelector('#title');
+const priceInput = adForm.querySelector('#price');
+const roomNumberInput = adForm.querySelector('#room_number');
+const capacityInput = adForm.querySelector('#capacity');
+const typeInput = adForm.querySelector('#type');
+const timeInInput = adForm.querySelector('#timein');
+const timeOutInput = adForm.querySelector('#timeout');
+const addressInput = adForm.querySelector('#address');
+const fieldsets = adForm.querySelectorAll('fieldset');
+const selects = mapFilters.querySelectorAll('select');
+const submitButton = document.querySelector('.ad-form__submit');
+const resetButton = document.querySelector('.ad-form__reset');
 
-/**
- * Функция, генерирующая объект соответствий select.options[i].value с его индексом. Нужна для обработчика onRoomNumberSelectChange();
- */
-const getCapacityIndex = () => {
-  for (let i = 0; i < adFormCapacity.length; i++) {
-    capacityIndex[adFormCapacity.options[i].value] = i;
+const AdTypePrices = {
+  bungalow: 0,
+  flat: 1000,
+  hotel: 3000,
+  house: 5000,
+  palace: 10000,
+};
+
+const onTitleChange = () => {
+  if (titleInput.validity.valueMissing) {
+    titleInput.setCustomValidity('Заполните заголовок объявления');
+  } else if (titleInput.validity.tooShort) {
+    titleInput.setCustomValidity('Заголовок объявления должен содержать минимум 30 символов');
+  } else {
+    titleInput.setCustomValidity('');
   }
+  titleInput.reportValidity();
 };
-getCapacityIndex();
 
-/**
- * Обработчик, устанавливающий правильные значения в <select id="capacity">
- */
-const onRoomNumberSelectChange = () => {
-  const roomMatching = adRoomGuests[adFormRoomNumber.value];
-  for (let i = 0; i < adFormCapacity.length; i++) {
-    adFormCapacity.options[i].disabled = true;
+const onPriceChange = () => {
+  if (priceInput.validity.valueMissing) {
+    priceInput.setCustomValidity('Цена за ночь обязательна для заполнения');
+  } else if (priceInput.validity.rangeOverflow) {
+    priceInput.setCustomValidity('Цена должна быть меньше или равна 1 000 000');
+  } else {
+    priceInput.setCustomValidity('');
   }
-
-  roomMatching.some((match) => {
-    adFormCapacity.options[capacityIndex[match]].disabled = false;
-  });
-
-  adFormCapacity.options[capacityIndex[roomMatching[0]]].selected = true;
+  priceInput.reportValidity();
 };
 
-/**
- * Обработчик, выводящий окошко валидации длины поля для <input type="text">
- * @param {element} element элемент <input type="text">
- */
-const onTextInputLengthChange = (element, MIN_LENGTH, MAX_LENGTH) => {
-  const elementLength = element.value.length;
-
-  element.setCustomValidity('');
-  if (elementLength < MIN_LENGTH) {
-    element.setCustomValidity(`Введите еще ${MIN_LENGTH - elementLength} симв.`);
-  } else if (elementLength > MAX_LENGTH) {
-    element.setCustomValidity(`Удалите лишние ${MIN_LENGTH - MAX_LENGTH} симв.`);
+const onCapacityChange = () => {
+  if (roomNumberInput.value === '1' && capacityInput.value !== '1') {
+    roomNumberInput.setCustomValidity('жильё для одного гостя');
+  } else if (roomNumberInput.value === '2' && capacityInput.value !== '1' && capacityInput.value !== '2') {
+    roomNumberInput.setCustomValidity('вмещает от 1 до 2 гостей');
+  } else if (roomNumberInput.value === '3' && capacityInput.value === '0') {
+    roomNumberInput.setCustomValidity('вмещает от 1 до 3 гостей');
+  } else if (roomNumberInput.value === '100' && capacityInput.value !== '0') {
+    roomNumberInput.setCustomValidity('Жильё не для гостей');
+  } else {
+    roomNumberInput.setCustomValidity('');
   }
-
-  element.reportValidity();
+  roomNumberInput.reportValidity();
 };
 
-/**
- * Обработчик, выводящий окошко валидации цифрового значения для <input type="number">
- * @param {element} element элемент <input type="number"> с прописанными в вёрстке значениями min и max
- */
-const onNumberInputValueChange = (element) => {
-  const elementValue = element.value;
-  const MIN = Number(element.min);
-  const MAX = Number(element.max);
-  element.setCustomValidity('');
-  if (elementValue < MIN) {
-    element.setCustomValidity(`Число не должно быть меньше ${MIN}`);
-  } else if (elementValue > MAX) {
-    element.setCustomValidity(`Число не должно быть больше ${MAX}`);
-  }
-
-  element.reportValidity();
+const onTypeChange = () => {
+  priceInput.placeholder = AdTypePrices[typeInput.value];
+  priceInput.min = AdTypePrices[typeInput.value];
 };
 
-/**
- * Обработчик, устанавливающий минимальное значение и плейсхолдер для инпута с ценой
- */
-const onTypeSelectChange = () => {
-  adFormPrice.placeholder = adTypePrices[adFormType[adFormType.selectedIndex].text];
-  adFormPrice.min = adTypePrices[adFormType[adFormType.selectedIndex].text];
+const onCheckinChange = (evt) => {
+  timeOutInput.value = evt.target.value;
+  timeInInput.value = evt.target.value;
 };
 
-/**
- * Функция, валидирующая <select>, где должны быть одинаковые значения
- * @param {element} selectorOne первый связанный <select>
- * @param {element} selectorTwo второй связанный <select>
- */
-const validateTwoSelects = (selectorOne, selectorTwo) => {
-  const selectOne = document.querySelector(selectorOne);
-  const selectTwo = document.querySelector(selectorTwo);
-  const selects = [selectOne, selectTwo];
-  selects.forEach((select) => {
-    select.addEventListener('change', () => {
-      selects.some((someSelect) => {
-        if (select !== someSelect) {
-          someSelect.value = select.value;
-        }
-      });
-    });
-  });
-};
+typeInput.addEventListener('change', onTypeChange);
+titleInput.addEventListener('input', onTitleChange);
+priceInput.addEventListener('input', onPriceChange);
+roomNumberInput.addEventListener('change', onCapacityChange);
+capacityInput.addEventListener('change', onCapacityChange);
+timeInInput.addEventListener('change', onCheckinChange);
+timeOutInput.addEventListener('change', onCheckinChange);
 
-/**
- * Функция, переводящая элементы страницы в неактивное состояние
- * @param {array} selectors массив селекторов (по классу, без точки) родительских элементов, чьи элементы нужно перевести в неактивное состояние
- */
-const hideElements = (selectors) => {
-  selectors.forEach((selector) => {
-    const element = document.querySelector(`.${selector}`);
-    element.classList.add(`${selector}--disabled`);
-    element.querySelectorAll('fieldset, select, input, textarea, button').forEach((elementChild) => {
-      elementChild.disabled = true;
-    });
-  });
-};
-
-/**
- * Функция, переводящая элементы страницы в активное состояние
- * @param {array} selectors массив селекторов (по классу, без точки) родительских элементов, чьи элементы нужно перевести в активное состояние
- */
-const showElements = (selectors) => {
-  selectors.forEach((selector) => {
-    const element = document.querySelector(`.${selector}`);
-    element.classList.remove(`${selector}--disabled`);
-    element.querySelectorAll('fieldset, select, input, textarea, button').forEach((elementChild) => {
-      elementChild.disabled = false;
-    });
-  });
-};
-
-onTypeSelectChange();
-
-adFormTitle.addEventListener('input', () => {
-  onTextInputLengthChange(adFormTitle, 30, 100);
+submitButton.addEventListener('click', () => {
+  onTitleChange();
+  onPriceChange();
+  onCapacityChange();
+  onTypeChange();
 });
 
-adFormPrice.addEventListener('input', () => {
-  onNumberInputValueChange(adFormPrice);
+const toggleActivationForm = (data) => {
+  if (!data) {
+    adForm.classList.add('ad-form--disabled');
+    mapFilters.classList.add('map__filters--disabled');
+    fieldsets.forEach((fieldset) => fieldset.setAttribute('disabled', ''));
+    selects.forEach((select) => select.setAttribute('disabled', ''));
+  }
+  else {
+    adForm.classList.remove('ad-form--disabled');
+    mapFilters.classList.remove('map__filters--disabled');
+    fieldsets.forEach((fieldset) => fieldset.removeAttribute('disabled'));
+    selects.forEach((select) => select.removeAttribute('disabled'));
+  }
+};
+
+const resetFormAndFilters = () => {
+  adForm.reset();
+  mapFilters.reset();
+};
+
+const resetToDefault = () => {
+  resetFormAndFilters();
+  setDefaultMainPin();
+  setDefaultAddress();
+  getData(onGetSuccess);
+};
+
+adForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  sendData(
+    new FormData(evt.target),
+  );
 });
 
-onRoomNumberSelectChange();
-
-adFormRoomNumber.addEventListener('change', () => {
-  onRoomNumberSelectChange();
+resetButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  resetToDefault();
+  removeMarkerGroup();
 });
 
-adFormType.addEventListener('change', () => {
-  onTypeSelectChange();
-});
-
-validateTwoSelects('#timein', '#timeout');
-
-export {adFromAddress, hideElements, showElements};
+export {toggleActivationForm, resetToDefault, addressInput};
