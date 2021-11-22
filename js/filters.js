@@ -1,4 +1,5 @@
 import {removeMarkerGroup} from './map.js';
+import {debounce} from './util.js';
 
 const PricesKeys = {
   'low': 10000,
@@ -51,10 +52,12 @@ const getFeaturesArray = (features, item) => {
 };
 
 const setFilterFormChange = (cb) => {
-  mapFilters.addEventListener('change', () => {
-    removeMarkerGroup();
-    cb();
-  });
+  mapFilters.addEventListener('change', debounce(
+    () => {
+      removeMarkerGroup();
+      cb();
+    }),
+  );
 };
 
 

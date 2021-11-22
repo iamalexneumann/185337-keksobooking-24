@@ -11,25 +11,29 @@ const showErrorMessage = (message = 'Ошибка размещения объя�
 
   errorMessageNode.querySelector('.error__message').textContent = message;
 
-  const onDocumentClick = () => {
-    errorMessageNode.remove();
-    document.removeEventListener('click', onDocumentClick);
-  };
-
-  const onDocumentEscKeydown = (key) => {
-    if (isEsc(key)) {
+  const onDocumentEscKeydown = (evt) => {
+    if (isEsc(evt)) {
+      evt.preventDefault();
       errorMessageNode.remove();
       document.removeEventListener('keydown', onDocumentEscKeydown);
     }
   };
 
-  const onErrorButtonClick = () => {
+  const onDocumentClick = (evt) => {
+    evt.preventDefault();
     errorMessageNode.remove();
-    document.removeEventListener('click', onErrorButtonClick);
+    errorMessageNode.removeEventListener('click', onDocumentClick);
+    document.removeEventListener('keydown', onDocumentEscKeydown);
   };
 
-  document.addEventListener('click', onDocumentClick);
+  const onErrorButtonClick = () => {
+    errorMessageNode.remove();
+    errorButton.removeEventListener('click', onErrorButtonClick);
+    document.removeEventListener('keydown', onDocumentEscKeydown);
+  };
+
   document.addEventListener('keydown', onDocumentEscKeydown);
+  errorMessageNode.addEventListener('click', onDocumentClick);
   errorButton.addEventListener('click', onErrorButtonClick);
 };
 
@@ -38,20 +42,24 @@ const showSuccessMessage = () => {
 
   const successMessageNode = document.querySelector('.success');
 
-  const onDocumentClick = () => {
-    successMessageNode.remove();
-    document.removeEventListener('click', onDocumentClick);
-  };
-
-  const onDocumentEscKeydown = (key) => {
-    if (isEsc(key)) {
+  const onDocumentEscKeydown = (evt) => {
+    if (isEsc(evt)) {
+      evt.preventDefault();
       successMessageNode.remove();
       document.removeEventListener('keydown', onDocumentEscKeydown);
     }
   };
 
-  document.addEventListener('click', onDocumentClick);
+  const onDocumentClick = (evt) => {
+    evt.preventDefault();
+    successMessageNode.remove();
+    successMessageNode.removeEventListener('click', onDocumentClick);
+    document.removeEventListener('keydown', onDocumentEscKeydown);
+  };
+
   document.addEventListener('keydown', onDocumentEscKeydown);
+  successMessageNode.addEventListener('click', onDocumentClick);
 };
 
 export {showErrorMessage, showSuccessMessage};
+

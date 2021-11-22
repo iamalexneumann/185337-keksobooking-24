@@ -1,7 +1,7 @@
 import {getData} from './api.js';
 import {onGetSuccess} from './api.js';
 import {filterOffers} from './filters.js';
-import {toggleActivationForm, addressInput} from './form.js';
+import {addressInput} from './form.js';
 import {createSimilarAd} from './popup.js';
 
 const mapCanvas = document.querySelector('.map__canvas');
@@ -47,11 +47,11 @@ const mainMarker = L.marker(
 );
 mainMarker.addTo(map);
 
-const inputCoordinates = (evt) => {
+const onInputCoordinatesChange = (evt) => {
   const targetCoordinates = evt.target.getLatLng();
   addressInput.value = `${targetCoordinates.lat.toFixed(5)}, ${targetCoordinates.lng.toFixed(5)}`;
 };
-mainMarker.addEventListener('moveend', inputCoordinates);
+mainMarker.addEventListener('move', onInputCoordinatesChange);
 
 const markerGroup = L.layerGroup().addTo(map);
 
@@ -61,7 +61,7 @@ const removeMarkerGroup = () => {
 
 const createMarkerWithInfo = (similarCard) => {
   const {location} = similarCard;
-  const marker = L.marker(location, pinIcon);
+  const marker = L.marker(location, {icon: pinIcon});
 
   marker
     .addTo(markerGroup)
@@ -92,7 +92,6 @@ const setDefaultAddress = () => addressInput.value = `${LAT_CENTER_TOKIO.toFixed
 
 const initializeMap = () => {
   map.addEventListener('load', () => {
-    toggleActivationForm(true);
     setDefaultAddress();
     getData(onGetSuccess);
   })
@@ -102,4 +101,4 @@ const initializeMap = () => {
     }, ZOOM);
 };
 
-export {showMarkers, setDefaultMainPin, setDefaultAddress, removeMarkerGroup, initializeMap};
+export {showMarkers, setDefaultMainPin, setDefaultAddress, removeMarkerGroup, initializeMap, map};

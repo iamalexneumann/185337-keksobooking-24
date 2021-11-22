@@ -1,8 +1,8 @@
 import {getFeaturesArray, setFilterFormChange} from './filters.js';
 import {resetToDefault, toggleActivationForm} from './form.js';
-import {showMarkers, removeMarkerGroup} from './map.js';
+import {showMarkers} from './map.js';
 import {showErrorMessage, showSuccessMessage} from './messages.js';
-import {debounce, showAlert} from './util.js';
+import {showAlert} from './util.js';
 
 const URL_SERVER = 'https://24.javascript.pages.academy/keksobooking';
 
@@ -10,8 +10,7 @@ const onGetSuccess = (response) => {
   const rankingResponse = response.reduce(getFeaturesArray, []);
   showMarkers(rankingResponse);
   toggleActivationForm(true);
-  setFilterFormChange(debounce (
-    () => showMarkers(rankingResponse)));
+  setFilterFormChange(() => showMarkers(rankingResponse));
 };
 
 const getData = (onSuccess) => {
@@ -33,7 +32,6 @@ const sendData = (body) => {
       if (response.ok) {
         showSuccessMessage();
         resetToDefault();
-        removeMarkerGroup();
       } else {
         showErrorMessage();
       }

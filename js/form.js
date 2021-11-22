@@ -1,6 +1,6 @@
-import {getData, onGetSuccess, sendData} from './api.js';
+import {sendData} from './api.js';
 import {mapFilters} from './filters.js';
-import {setDefaultAddress, setDefaultMainPin, removeMarkerGroup} from './map.js';
+import {map, setDefaultAddress, setDefaultMainPin} from './map.js';
 
 const adForm = document.querySelector('.ad-form');
 const titleInput = adForm.querySelector('#title');
@@ -71,6 +71,8 @@ const onCheckinChange = (evt) => {
   timeInInput.value = evt.target.value;
 };
 
+onTypeChange();
+
 typeInput.addEventListener('change', onTypeChange);
 titleInput.addEventListener('input', onTitleChange);
 priceInput.addEventListener('input', onPriceChange);
@@ -83,21 +85,19 @@ submitButton.addEventListener('click', () => {
   onTitleChange();
   onPriceChange();
   onCapacityChange();
-  onTypeChange();
 });
 
 const toggleActivationForm = (data) => {
-  if (!data) {
-    adForm.classList.add('ad-form--disabled');
-    mapFilters.classList.add('map__filters--disabled');
-    fieldsets.forEach((fieldset) => fieldset.setAttribute('disabled', ''));
-    selects.forEach((select) => select.setAttribute('disabled', ''));
-  }
-  else {
+  if (data) {
     adForm.classList.remove('ad-form--disabled');
     mapFilters.classList.remove('map__filters--disabled');
     fieldsets.forEach((fieldset) => fieldset.removeAttribute('disabled'));
     selects.forEach((select) => select.removeAttribute('disabled'));
+  } else {
+    adForm.classList.add('ad-form--disabled');
+    mapFilters.classList.add('map__filters--disabled');
+    fieldsets.forEach((fieldset) => fieldset.setAttribute('disabled', ''));
+    selects.forEach((select) => select.setAttribute('disabled', ''));
   }
 };
 
@@ -110,7 +110,9 @@ const resetToDefault = () => {
   resetFormAndFilters();
   setDefaultMainPin();
   setDefaultAddress();
-  getData(onGetSuccess);
+  onTypeChange();
+  mapFilters.dispatchEvent(new Event('change'));
+  map.closePopup();
 };
 
 adForm.addEventListener('submit', (evt) => {
@@ -123,7 +125,6 @@ adForm.addEventListener('submit', (evt) => {
 resetButton.addEventListener('click', (evt) => {
   evt.preventDefault();
   resetToDefault();
-  removeMarkerGroup();
 });
 
-export {toggleActivationForm, resetToDefault, addressInput};
+export {toggleActivationForm, resetToDefault, onTypeChange, addressInput};
