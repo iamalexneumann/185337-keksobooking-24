@@ -72,10 +72,16 @@ const createMarkerWithInfo = (similarCard) => {
 };
 
 const showMarkers = (offers) => {
-  offers
-    .filter(filterOffers)
-    .slice(0, OFFERS_COUNT)
-    .forEach(createMarkerWithInfo);
+  let counterMarker = 0;
+  for (let i = 0; i < offers.length; i++) {
+    if (filterOffers(offers[i])) {
+      createMarkerWithInfo(offers[i]);
+      counterMarker++;
+    }
+    if (counterMarker >= OFFERS_COUNT) {
+      break;
+    }
+  }
 };
 
 const setDefaultMainPin = () => {
